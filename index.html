@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Full Screen Image Click-through</title>
+  <title>Sanguine Agency Portfolio</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -20,7 +20,7 @@
       cursor: default;
     }
 
-    /* FIXED WHITE TOP BANNER */
+    /* FIXED TOP WHITE BANNER */
     .top-banner {
       position: fixed;
       top: 0;
@@ -31,7 +31,6 @@
       box-sizing: border-box;
     }
 
-    /* INNER BANNER: 2 COLUMNS */
     .top-banner-inner {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -46,19 +45,21 @@
       text-align: left;
       line-height: 0.8;
     }
+
     .text-column p {
       margin: 0 0 0.4rem 0;
     }
+
     .text-column a {
-      color: inherit;
       text-decoration: underline;
+      color: inherit;
     }
 
     .name-role {
       font-weight: 500;
     }
 
-    /* FULL-BLEED IMAGE BELOW BANNER */
+    /* FULL BLEED IMAGE */
     .image-area {
       position: fixed;
       left: 0;
@@ -66,8 +67,23 @@
       background-size: cover;
       background-position: top center;
       background-repeat: no-repeat;
+      cursor: none;
       z-index: 0;
-      cursor: pointer;
+    }
+
+    /* pure text mouse indicator */
+    .mouse-indicator {
+      position: fixed;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 8pt;
+      color: #000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s ease;
+      z-index: 20;
+      background: none;
+      padding: 0;
+      border-radius: 0;
     }
 
     /* MOBILE */
@@ -77,7 +93,6 @@
         row-gap: 1rem;
         padding: 1.25rem;
       }
-
       .text-column {
         max-width: 100%;
         font-size: 0.9rem;
@@ -91,123 +106,121 @@
   <div class="top-banner" id="topBanner">
     <div class="top-banner-inner">
 
-      <!-- COLUMN 1 — FIXED TEXT -->
+      <!-- COLUMN 1 -->
       <div class="text-column">
         <p class="name-role">Camille Yvert | Design + Art Direction</p>
-        <p class="download-links">
+        <p>
           <a href="cv.pdf" target="_blank">CV</a> |
           <a href="portfolio.pdf" target="_blank">Portfolio</a> |
           <a href="mailto:camille.yvert@gmail.com">Contact</a>
         </p>
       </div>
 
-      <!-- COLUMN 2 — CAPTION -->
-      <div class="text-column" id="column2">
-        <p>Loading…</p>
+      <!-- COLUMN 2 — NOW: Caption first, Counter second -->
+      <div class="text-column">
+        <p id="captionLine">Loading…</p>
+        <p id="slideCounter">1 / 17</p>
       </div>
 
     </div>
   </div>
 
-  <!-- FULL BLEED IMAGE AREA -->
+  <!-- FULL BLEED IMAGE -->
   <div class="image-area" id="imageArea"></div>
 
-  <script>
-    /* IMAGE LIST */
-    let images = [
-      "images/photo1.jpg",
-      "images/photo2.jpg",
-      "images/photo3.jpg",
-      "images/photo4.jpg",
-      "images/photo5.jpg",
-      "images/photo6.jpg",
-      "images/photo7.jpg",
-      "images/photo8.jpg",
-      "images/photo9.jpg",
-      "images/photo10.jpg",
-      "images/photo11.jpg",
-      "images/photo12.jpg",
-      "images/photo13.jpg",
-      "images/photo14.jpg",
-      "images/photo15.jpg",
-      "images/photo16.jpg",
-      "images/photo17.jpg"
-    ];
+  <!-- TEXT-ONLY MOUSE INDICATOR -->
+  <div class="mouse-indicator" id="mouseIndicator">next</div>
 
-    /* CAPTIONS — Add more to match your image list */
-    let imageCaptions = [
-      `<p>The Nue co. | Head of design</p><p>Packaging Rebrand</p>`,
-      `<p>The Nue co. | Head of design</p><p>Brand Guidelines and Identity</p>`,
-      `<p>The Nue co. | Head of design</p><p>Offsite Digital</p>`,
-      `<p>Beauty Seen Group | Lead Designer</p><p>Dove Hair Brand Book</p>`,
-      `<p>The Nue co. | Head of design</p><p>Offsite Digital</p>`,
-      `<p>Farfetch | Senior Designer</p><p>Print and Digital Assets</p>`,
-      `<p>Farfetch | Assistant art director</p><p>Assisting AD with shoot production</p>`,
-      `<p>The Nue co. | Head of design</p><p>Product Launch Kit</p>`,
-      `<p>The Nue co. | Head of design</p><p>Packaging Rebrand</p>`,
-      `<p>Farfetch | Assistant art director</p><p>Production and Creative Strategy</p>`,
-      `<p>Farfetch | Senior Designer</p><p>Homepage and Editorials</p>`,
-      `<p>So.Journer | Senior Designer </p><p>Lookbook and Editorial</p>`,
-      `<p>Farfetch | Senior Designer</p><p>Beat Campaign Identity</p>`,
-      `<p>Vestiaire Collective | Senior Designer</p><p>Offsite Digital Assets</p>`,
-      `<p>Urban Night Project | Senior Designer</p><p>Visual Identity</p>`,
-      `<p>Lyma | Graphic Designer</p><p>Print and Digital</p>`,
-      `<p>Hi Noon | Graphic Designer</p><p>Visual Identity</p>`
-      /* Add more captions if you want — otherwise column2 will be empty for remaining images */
-    ];
+<script>
+  /* IMAGES */
+  let images = [
+    "images/photo1.jpg","images/photo2.jpg","images/photo3.jpg","images/photo4.jpg",
+    "images/photo5.jpg","images/photo6.jpg","images/photo7.jpg","images/photo8.jpg",
+    "images/photo9.jpg","images/photo10.jpg","images/photo11.jpg","images/photo12.jpg",
+    "images/photo13.jpg","images/photo14.jpg","images/photo15.jpg"
+  ];
 
-    /* SHUFFLE images + captions ONCE at page load */
-    function shufflePairArrays(imgArr, capArr) {
-      for (let i = imgArr.length - 1; i > 0; i--) {
-        const r = Math.floor(Math.random() * (i + 1));
+  /* ONE-LINE CAPTIONS */
+  let captions = [
+    "Beauty Seen Group / Client: Dove | Lead Designer",
+    "The Nue Co | Head of Design",
+    "The Nue Co | Head of Design",
+    "The Nue Co | Head of Design",
+    "Trends & Culture Agency / Client: Ecco | Lead Designer",
+    "The Nue Co | Head of Design",
+   "Trends & Culture Agency / CLient: Ecco | Lead Designer",
+   "Farfect | Senior Designer",
+    "Farfect | Assistant Art Director",
+    "Vestiaire Collective | Senior Designer",
+    "Urban Night Project | Senior Designer",
+  "Farfect | Senior Designer, Picture Editor",
+     "Farfect | Senior Designer",
+     "Lyma | Graphic Designer",
+     "Farfect | Senior Designer"
+  ];
 
-        /* Swap images */
-        [imgArr[i], imgArr[r]] = [imgArr[r], imgArr[i]];
+  /* SHUFFLE IMAGES + CAPTIONS ONCE */
+  function shufflePairs(a, b) {
+    for (let i = a.length - 1; i > 0; i--) {
+      const r = Math.floor(Math.random() * (i + 1));
+      [a[i], a[r]] = [a[r], a[i]];
+      [b[i], b[r]] = [b[r], b[i]];
+    }
+  }
+  shufflePairs(images, captions);
 
-        /* Swap captions if they exist */
-        if (capArr[i] && capArr[r]) {
-          [capArr[i], capArr[r]] = [capArr[r], capArr[i]];
-        }
-      }
+  let currentIndex = 0;
+
+  const topBanner = document.getElementById("topBanner");
+  const imageArea = document.getElementById("imageArea");
+  const slideCounter = document.getElementById("slideCounter");
+  const captionLine = document.getElementById("captionLine");
+  const mouseIndicator = document.getElementById("mouseIndicator");
+
+  function showImage(i) {
+    imageArea.style.backgroundImage = `url('${images[i]}')`;
+    slideCounter.textContent = `${i + 1} / ${images.length}`;
+    captionLine.textContent = captions[i] || "";
+  }
+
+  function layoutImageArea() {
+    const h = topBanner.offsetHeight;
+    imageArea.style.top = h + "px";
+    imageArea.style.height = `calc(100vh - ${h}px)`;
+  }
+
+  /* MOUSE MOVE → TEXT FOLLOW + BACK/NEXT LABEL */
+  imageArea.addEventListener("mousemove", (e) => {
+    const mid = window.innerWidth / 2;
+    mouseIndicator.textContent = e.clientX < mid ? "back" : "next";
+    mouseIndicator.style.left = (e.clientX + 10) + "px";
+    mouseIndicator.style.top = (e.clientY + 20) + "px";
+    mouseIndicator.style.opacity = 1;
+  });
+
+  imageArea.addEventListener("mouseleave", () => {
+    mouseIndicator.style.opacity = 0;
+  });
+
+  /* CLICK → BACK or NEXT */
+  imageArea.addEventListener("click", (e) => {
+    const mid = window.innerWidth / 2;
+
+    if (e.clientX < mid) {
+      currentIndex = (currentIndex - 1 + images.length) % images.length; // BACK
+    } else {
+      currentIndex = (currentIndex + 1) % images.length; // NEXT
     }
 
-    shufflePairArrays(images, imageCaptions);
+    showImage(currentIndex);
+  });
 
-    /* MAIN LOGIC */
-    let currentIndex = 0;
-    const topBanner = document.getElementById("topBanner");
-    const imageArea = document.getElementById("imageArea");
-    const column2 = document.getElementById("column2");
-
-    function updateColumn2(index) {
-      column2.innerHTML = imageCaptions[index] || "";
-    }
-
-    function showImage(index) {
-      imageArea.style.backgroundImage = `url('${images[index]}')`;
-      updateColumn2(index);
-    }
-
-    /* Layout image area below banner */
-    function layoutImageArea() {
-      const bannerHeight = topBanner.offsetHeight;
-      imageArea.style.top = bannerHeight + "px";
-      imageArea.style.height = `calc(100vh - ${bannerHeight}px)`;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      layoutImageArea();
-      showImage(currentIndex);
-
-      window.addEventListener("resize", layoutImageArea);
-
-      /* CLICK: Advance through shuffled list */
-      imageArea.addEventListener("click", () => {
-        currentIndex = (currentIndex + 1) % images.length;
-        showImage(currentIndex);
-      });
-    });
-  </script>
+  document.addEventListener("DOMContentLoaded", () => {
+    layoutImageArea();
+    showImage(currentIndex);
+    window.addEventListener("resize", layoutImageArea);
+  });
+</script>
 
 </body>
 </html>
