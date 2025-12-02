@@ -2,231 +2,289 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Presage</title>
+  <title>PRESAGE</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
-    }
-
-    body {
+      height: 100vh;
+      width: 100vw;
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       font-size: 10pt;
-      background-color: #ffffff;
-      color: #000000;
-      cursor: default;
-    }
-
-    /* FIXED TOP WHITE BANNER */
-    .top-banner {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+      font-weight: 400;
       background: #ffffff;
-      z-index: 10;
+      color: #000000;
+      position: relative;
       box-sizing: border-box;
+      overflow-x: hidden;
     }
 
-    .top-banner-inner {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 1rem;
-      padding: 1.5rem;
-      box-sizing: border-box;
+    /* ----------- IMAGE PREVIEW BEHIND TEXT (DESKTOP) ----------- */
+    #image-preview {
+      position: absolute;
+      top: 35%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
     }
 
-    /* TEXT COLUMNS */
-    .text-column {
-      max-width: 33vw;
-      text-align: left;
-      line-height: 0.8;
+    #image-preview img {
+      width: 340px;
+      height: auto;
+      display: block;
+      object-fit: contain;
     }
 
-    .text-column p {
-      margin: 0 0 0.4rem 0;
+    /* Hide preview on mobile */
+    @media (max-width: 700px) {
+      #image-preview {
+        display: block;
+        opacity: 0.85;
+        top: 55%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      #image-preview img {
+        width: 260px;
+        height: auto;
+      }
     }
 
-    .text-column a {
-      text-decoration: underline;
-      color: inherit;
+    /* ----------- DESKTOP LAYOUT (ABSOLUTE) ----------- */
+
+    .top-left {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      line-height: 1.3;
+      z-index: 2;
     }
 
-    .name-role {
+    .top-left .name {
       font-weight: 500;
     }
 
-    /* FULL BLEED IMAGE */
-    .image-area {
-      position: fixed;
-      left: 0;
-      right: 0;
-      background-size: cover;
-      background-position: top center;
-      background-repeat: no-repeat;
-      cursor: none;
-      z-index: 0;
+    .center-block {
+      position: absolute;
+      top: 42%;
+      left: 40px;
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: 140px;
+      align-items: end;
+      line-height: 1.3;
+      z-index: 2;
     }
 
-    /* pure text mouse indicator */
-    .mouse-indicator {
-      position: fixed;
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      font-size: 8pt;
-      color: #000;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.15s ease;
-      z-index: 20;
-      background: none;
-      padding: 0;
-      border-radius: 0;
+    .small-label {
+      margin-bottom: 10px;
     }
 
-    /* MOBILE */
-    @media (max-width: 768px) {
-      .top-banner-inner {
-        grid-template-columns: 1fr;
-        row-gap: 1rem;
-        padding: 1.25rem;
+    .big-link {
+      font-size: 52pt;
+      font-weight: 500;
+      text-decoration: underline;
+      color: black;
+      line-height: 1;
+    }
+
+    .bottom-left {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      max-width: 430px;
+      line-height: 1.3;
+      z-index: 2;
+    }
+
+    .bottom-right {
+      position: absolute;
+      bottom: 40px;
+      left: 520px;
+      line-height: 1.3;
+      z-index: 2;
+    }
+
+    a {
+      text-decoration: none;
+      color: black;
+    }
+    a.big-link {
+      text-decoration: underline;
+    }
+
+    /* ----------- MOBILE LAYOUT (STACKED + AUTO-FLICK) ----------- */
+    @media (max-width: 700px) {
+      .top-left,
+      .center-block,
+      .bottom-left,
+      .bottom-right {
+        position: relative;
+        left: 0;
+        z-index: 2;
       }
-      .text-column {
-        max-width: 100%;
-        font-size: 0.9rem;
+
+      body {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding-bottom: 40px;
+      }
+
+      .top-left {
+        padding: 40px;
+        margin-bottom: 40px;
+      }
+
+      .center-block {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        transform: translateY(-10%);
+        padding-left: 40px;
+        padding-right: 40px;
+        margin-bottom: 40px;
+      }
+
+      .center-block div {
+        margin-bottom: 20px;
+      }
+
+      .big-link {
+        font-size: 36pt;
+      }
+
+      .bottom-left {
+        padding-left: 40px;
+        margin-top: 40px;
+      }
+
+      .bottom-right {
+        padding-left: 40px;
+        margin-top: 20px;
+        padding-bottom: 40px;
       }
     }
   </style>
 </head>
+
 <body>
 
-  <!-- TOP BANNER -->
-  <div class="top-banner" id="topBanner">
-    <div class="top-banner-inner">
+  <!-- IMAGE PREVIEW BEHIND TEXT -->
+  <div id="image-preview">
+    <img id="preview-img" src="1.jpg" alt="">
+  </div>
 
-      <!-- COLUMN 1 -->
-      <div class="text-column">
-        <p class="name-role">Camille Yvert | Design + Art Direction</p>
-        <p>
-          <a href="cv.pdf" target="_blank">CV</a> |
-          <a href="portfolio.pdf" target="_blank">Portfolio</a> |
-          <a href="mailto:camille.yvert@gmail.com">Contact</a>
-        </p>
-      </div>
+  <!-- TOP LEFT -->
+  <div class="top-left">
+    <div class="name">Camille Yvert</div>
+    <div>Lead Design + Art Direction</div>
+  </div>
 
-      <!-- COLUMN 2 — Caption first, Counter second -->
-      <div class="text-column">
-        <p id="captionLine">Loading…</p>
-        <p id="slideCounter">1 / 18</p>
-      </div>
+  <!-- CENTER TWO-COLUMN AREA -->
+  <div class="center-block">
+    <div>
+      <div class="small-label">View/Download (7.3mb)</div>
+      <a class="big-link" href="Camille Yvert Portfolio 2025.pdf" target="_blank">PORTFOLIO</a>
+    </div>
 
+    <div>
+      <a class="big-link" href="Camille Yvert CV 2025.pdf" target="_blank">CV</a>
     </div>
   </div>
 
-  <!-- FULL BLEED IMAGE -->
-  <div class="image-area" id="imageArea"></div>
+  <!-- BOTTOM LEFT -->
+  <div class="bottom-left">
+    Figma | Adobe Suite CC | Sketch | OpenAI | Visual Code Studio<br>
+    Banner Flow | Smartly | Monday | Microsoft
+  </div>
 
-  <!-- TEXT-ONLY MOUSE INDICATOR -->
-  <div class="mouse-indicator" id="mouseIndicator">next</div>
+  <!-- BOTTOM RIGHT -->
+  <div class="bottom-right">
+    camille.yvert@gmail.com<br>
+    +44 (0)7 542 843 769
+  </div>
 
-<script>
-  /* IMAGES (18) */
-  let images = [
-    "images/photo1.jpg","images/photo2.jpg","images/photo3.jpg","images/photo4.jpg",
-    "images/photo5.jpg","images/photo6.jpg","images/photo7.jpg","images/photo8.jpg",
-    "images/photo9.jpg","images/photo10.jpg","images/photo11.jpg","images/photo12.jpg",
-    "images/photo13.jpg","images/photo14.jpg","images/photo15.jpg",
-    "images/photo16.jpg","images/photo17.jpg","images/photo18.jpg"
-  ];
+  <!-- FLICKING SCRIPT (DESKTOP SPEED-BASED + MOBILE AUTO-FLICK) -->
+  <script>
+    const totalImages = 20;
+    const previewImg = document.getElementById("preview-img");
 
-  /* ONE-LINE CAPTIONS (18) */
-  let captions = [
-    "Beauty Seen Group / Client: Dove | Lead Designer",
-    "The Nue Co | Head of Design",
-    "The Nue Co | Head of Design",
-    "The Nue Co | Head of Design",
-    "Trends & Culture Agency / Client: Ecco | Lead Designer",
-    "The Nue Co | Head of Design",
-    "Trends & Culture Agency / CLient: Ecco | Lead Designer",
-    "Farfecth | Senior Designer",
-    "Farfect | Assistant Art Director",
-    "Vestiaire Collective | Senior Designer",
-    "Urban Night Project | Senior Designer",
-    "Farfecth | Senior Designer, Picture Editor",
-    "Farfecth | Senior Designer",
-    "Lyma | Graphic Designer",
-    "Farfecth | Senior Designer",
-    "The Nue Co | Head of Design",
-    "The Nue Co | Head of Design",
-    "Farfecth | Senior Designer"
-  ];
-
-  /* SHUFFLE IMAGES + CAPTIONS ONCE */
-  function shufflePairs(a, b) {
-    for (let i = a.length - 1; i > 0; i--) {
-      const r = Math.floor(Math.random() * (i + 1));
-      [a[i], a[r]] = [a[r], a[i]];
-      [b[i], b[r]] = [b[r], b[i]];
-    }
-  }
-  shufflePairs(images, captions);
-
-  let currentIndex = 0;
-
-  const topBanner = document.getElementById("topBanner");
-  const imageArea = document.getElementById("imageArea");
-  const slideCounter = document.getElementById("slideCounter");
-  const captionLine = document.getElementById("captionLine");
-  const mouseIndicator = document.getElementById("mouseIndicator");
-
-  function showImage(i) {
-    imageArea.style.backgroundImage = `url('${images[i]}')`;
-    slideCounter.textContent = `${i + 1} / ${images.length}`;
-    captionLine.textContent = captions[i] || "";
-  }
-
-  function layoutImageArea() {
-    const h = topBanner.offsetHeight;
-    imageArea.style.top = h + "px";
-    imageArea.style.height = `calc(100vh - ${h}px)`;
-  }
-
-  /* MOUSE MOVE → TEXT FOLLOW + BACK/NEXT LABEL */
-  imageArea.addEventListener("mousemove", (e) => {
-    const mid = window.innerWidth / 2;
-    mouseIndicator.textContent = e.clientX < mid ? "back" : "next";
-    mouseIndicator.style.left = (e.clientX + 10) + "px";
-    mouseIndicator.style.top = (e.clientY + 20) + "px";
-    mouseIndicator.style.opacity = 1;
-  });
-
-  imageArea.addEventListener("mouseleave", () => {
-    mouseIndicator.style.opacity = 0;
-  });
-
-  /* CLICK → BACK or NEXT */
-  imageArea.addEventListener("click", (e) => {
-    const mid = window.innerWidth / 2;
-
-    if (e.clientX < mid) {
-      // BACK
-      currentIndex = (currentIndex - 1 + images.length) % images.length;
-    } else {
-      // NEXT
-      currentIndex = (currentIndex + 1) % images.length;
+    // Preload images
+    for (let i = 1; i <= totalImages; i++) {
+      const img = new Image();
+      img.src = i + ".jpg";
     }
 
-    showImage(currentIndex);
-  });
+    let currentIndex = 1;
+    let lastX = null;
 
-  document.addEventListener("DOMContentLoaded", () => {
-    layoutImageArea();
-    showImage(currentIndex);
-    window.addEventListener("resize", layoutImageArea);
-  });
-</script>
+    /* ----------- DESKTOP FLICKING (MOUSE SPEED) ----------- */
+   let targetIndex = 1;
+let smoothingFrame = null;
+
+const sensitivity = 0.20;
+const maxStep = 1;
+const smoothness = 0.15; // lower = smoother, slower; higher = snappier
+
+
+    function desktopFlick(e) {
+      if (window.innerWidth <= 700) return;
+
+      if (lastX === null) {
+        lastX = e.clientX;
+        return;
+      }
+
+      const deltaX = e.clientX - lastX;
+      lastX = e.clientX;
+
+      let step = Math.floor(deltaX * sensitivity);
+      if (step > maxStep) step = maxStep;
+      if (step < -maxStep) step = -maxStep;
+
+      currentIndex += step;
+      if (currentIndex < 1) currentIndex = totalImages;
+      if (currentIndex > totalImages) currentIndex = 1;
+
+      previewImg.src = currentIndex + ".jpg";
+    }
+
+    window.addEventListener("mousemove", desktopFlick);
+
+    /* ----------- MOBILE AUTO-FLICK (FIXED SPEED) ----------- */
+    let mobileInterval = null;
+    const mobileSpeed = 800;
+
+    function startMobileAutoFlick() {
+      if (window.innerWidth > 700) {
+        if (mobileInterval !== null) {
+          clearInterval(mobileInterval);
+          mobileInterval = null;
+        }
+        return;
+      }
+
+      if (mobileInterval !== null) return;
+
+      mobileInterval = setInterval(() => {
+        currentIndex++;
+        if (currentIndex > totalImages) currentIndex = 1;
+        previewImg.src = currentIndex + ".jpg";
+      }, mobileSpeed);
+    }
+
+    window.addEventListener("load", startMobileAutoFlick);
+    window.addEventListener("resize", startMobileAutoFlick);
+  </script>
 
 </body>
 </html>
